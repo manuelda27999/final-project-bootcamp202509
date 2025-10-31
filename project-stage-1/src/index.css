@@ -1,0 +1,249 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  color: #1f2933;
+  background-color: #f5f7fa;
+}
+
+body {
+  margin: 0;
+  background-color: #f5f7fa;
+}
+
+header,
+footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid #d9e2ec;
+  border-bottom: 1px solid #d9e2ec;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+header {
+  top: 0;
+  border-top: none;
+}
+
+footer {
+  bottom: 0;
+  font-size: 0.9rem;
+  color: #52606d;
+}
+
+header nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: min(1024px, 100%);
+}
+
+.nav-brand h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.nav-brand p {
+  margin: 0.15rem 0 0;
+  color: #7b8794;
+  font-size: 0.9rem;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.nav-link {
+  color: #1f2933;
+  text-decoration: none;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #f0f4f8;
+}
+
+.nav-link-active {
+  background-color: #d9e2ec;
+  font-weight: 600;
+}
+
+header nav a {
+  color: #1f2933;
+  text-decoration: none;
+  padding: 0.4rem 0.6rem;
+}
+
+main {
+  min-height: 100vh;
+  padding: 6rem 1.5rem 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.page {
+  width: min(900px, 100%);
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 12px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.page p {
+  margin: 0;
+  color: #52606d;
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post-card {
+  border: 1px solid #d9e2ec;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.post-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #d9e2ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #1f2933;
+}
+
+.post-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.post-meta {
+  margin: 0.25rem 0 0;
+  color: #7b8794;
+  font-size: 0.9rem;
+}
+
+.post-body p {
+  margin: 0 0 0.75rem;
+}
+
+.post-body p:last-of-type {
+  margin-bottom: 0;
+}
+
+.post-tags {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.post-tags li {
+  padding: 0.25rem 0.5rem;
+  background: #e4e7eb;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: #52606d;
+}
+
+.post-stats {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+}
+
+.post-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.post-stats dt {
+  font-size: 0.8rem;
+  color: #7b8794;
+  margin: 0;
+}
+
+.post-stats dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  header nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .nav-list {
+    justify-content: flex-start;
+  }
+
+  main {
+    padding: 4.5rem 1rem 4rem;
+  }
+
+  .page {
+    padding: 1.25rem;
+  }
+}
