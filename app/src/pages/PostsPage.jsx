@@ -1,18 +1,36 @@
-import { useEffect, useState, useContext } from "react";
-import initialPosts from "../data/postsSoft.data.js";
+import { useEffect, useState } from "react";
 import PostItem from "../components/PostItem.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import CreatePostModal from "../components/CreatePostModal.jsx";
 import EditPostModal from "../components/EditPostModal.jsx";
 import DeletePostModal from "../components/DeletePostModal.jsx";
 import { usePostCount } from "../contexts/PostCountContext.jsx";
+import getPosts from "../logic/getPosts.js";
+import createPost from "../logic/createPost.js";
+import updatePost from "../logic/updatePost.js";
+import deletePost from "../logic/deletePost.js";
 
 export default function PostsPage() {
-  const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = useState([]); //Estado que contiene la lista de posts, lo iniciamos con un array vacío
   const [isCreateOpen, setIsCreateOpen] = useState(false); //Contorla la visibilidad del modal de creación
   const [postEditing, setPostEditing] = useState(null); //Contorla el post que se está editando
   const [postDeleting, setPostDeleting] = useState(null); //Contorla el post que se está eliminando
   const { setCount } = usePostCount();
+
+  useEffect(() => {
+    getPosts()
+      .then((data) =>
+        setPosts(
+          Array.isArray(data)
+            ? data.map((post) => ({
+                ...post,
+                id: post._id || post.id,
+              }))
+            : []
+        )
+      )
+      .catch((error) => console.error("Error fetching posts:", error));
+  }, []);
 
   // Ejemplo sencillo de useEffect: mantenemos el título actualizado con el total de posts
   useEffect(() => {
@@ -21,41 +39,69 @@ export default function PostsPage() {
   }, [posts.length, setCount]);
 
   // Función para manejar la creación de un nuevo post
-  function handleCreate(data) {
-    const newPost = {
-      id: globalThis.crypto?.randomUUID?.() || `p_${Date.now().toString(36)}`, // Genera un ID único
-      user: data.user,
-      imageUrl: data.imageUrl,
-      description: data.description,
-      createdAt: new Date().toISOString(),
-    };
-    setPosts((prev) => [...prev, newPost]);
-    setIsCreateOpen(false);
+  async function handleCreate(data) {
+    try {
+      const payload = {
+        user: data.user,
+        imageUrl: data.imageUrl,
+        description: data.description,
+        createdAt: new Date().toISOString(),
+      };
+
+      const created = await createPost(payload);
+      if (!created) return;
+
+      const normalized = {
+        ...created,
+        id: created._id || created.id,
+      };
+
+      setPosts((prev) => [...prev, normalized]);
+      setIsCreateOpen(false);
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
   }
 
   //Función para manejar la actualización de un post existente
-  function handleUpdate(data) {
+  async function handleUpdate(data) {
     if (!postEditing) return;
 
-    setPosts((prev) =>
-      prev.map((post) =>
-        post.id === postEditing.id
-          ? {
-              ...post,
-              user: data.user,
-              imageUrl: data.imageUrl,
-              description: data.description,
-            }
-          : post
-      )
-    );
-    setPostEditing(null);
+    try {
+      const updated = await updatePost(postEditing.id, {
+        user: data.user,
+        imageUrl: data.imageUrl,
+        description: data.description,
+      });
+      if (!updated) return;
+
+      const normalized = {
+        ...updated,
+        id: updated._id || updated.id,
+      };
+
+      setPosts((prev) =>
+        prev.map((post) => (post.id === postEditing.id ? normalized : post))
+      );
+      setPostEditing(null);
+    } catch (error) {
+      console.error("Error updating post:", error);
+    }
   }
 
   //Función para manejar la confirmación de eliminación de un post
-  function handleDeleteConfirm(id) {
-    setPosts((prev) => prev.filter((post) => post.id !== id));
-    setPostDeleting(null);
+  async function handleDeleteConfirm(id) {
+    try {
+      const deleted = await deletePost(id);
+      if (!deleted) return;
+
+      const deletedId = deleted._id || deleted.id || id;
+
+      setPosts((prev) => prev.filter((post) => post.id !== deletedId));
+      setPostDeleting(null);
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
   }
 
   return (
